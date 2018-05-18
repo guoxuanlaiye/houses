@@ -1,15 +1,15 @@
 import scrapy
 from ..items import AnjukeItem
-from ..sql import sql
+from ..sql import Sql
 
 class Anjuke(scrapy.Spider):
 
     name = "anjuke"
-    allowed_domains = ["shen.fang.anjuke.com"]
-    start_urls = ["https://shen.fang.anjuke.com/loupan/all/p1/"]
+    allowed_domains = ["wh.fang.anjuke.com"]
+    start_urls = ["https://wh.fang.anjuke.com/loupan/all/p1/"]
 
     # 初始化数据库
-    sql.initDB()
+    Sql.initDB()
 
     def parse(self, response):
         house_resource = response.xpath('//div[@class="key-list"]/div')

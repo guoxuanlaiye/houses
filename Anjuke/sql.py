@@ -13,15 +13,17 @@ from sqlalchemy import (
     String
 )
 
-engine = create_engine('mysql://root:@localhost:3306/houses?charset=utf8', encoding='utf8', echo=False)
-BaseDB = declarative_base()
+class Sql(object):
 
-# session对象
-DBSession = sessionmaker(bind=engine)
+    engine = create_engine('mysql://root:@localhost:3306/houses?charset=utf8', encoding='utf8', echo=False)
+    BaseDB = declarative_base()
+    # session对象
+    DBSession = sessionmaker(bind=engine)
 
-# 初始化数据库
-def initDB():
-    BaseDB.metadata.create_all(engine)
+    # 初始化数据库
+    @classmethod
+    def initDB(cls):
+        cls.BaseDB.metadata.create_all(cls.engine)
 
 
 '''
@@ -34,8 +36,8 @@ tags
 houses_type
 houses_area
 '''
-class Houses(BaseDB):
-    __tablename__ = "anjuke_shenyang"
+class Houses(Sql.BaseDB):
+    __tablename__ = "anjuke_wuhan"
 
     id = Column(Integer, primary_key=True)
     houses_name = Column(String(50), nullable=False)
