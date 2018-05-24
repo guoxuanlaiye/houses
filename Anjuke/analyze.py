@@ -26,7 +26,7 @@ class Sql(object):
 
 
 class Houses(Sql.BaseDB):
-    __tablename__ = "anjuke_tianjin"
+    __tablename__ = "anjuke_chengdu"
 
     id = Column(Integer, primary_key=True)
     houses_name = Column(String(50), nullable=False)
@@ -59,43 +59,43 @@ def main():
     # print(type(houses_price_list))
     print(len(houses_price_list))
     prices = [price for item, price in houses_price_list]
-    draw(prices)
+    draw(city="chengdu", data=prices)
 
 
-def draw(data):
+def draw(city, data):
     if not isinstance(data, list):
         return
-
-    # mpl.rcParams['xtick.labelsize'] = 20
-    # mpl.rcParams['ytick.labelsize'] = 20
+    # 设置文字格式
+    plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+    plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+    plt.rcParams['xtick.labelsize'] = 10
+    plt.rcParams['ytick.labelsize'] = 10
+    # 排序
     data.sort()
-    xticks = []
+
     yticks = []
-    for k, g in groupby(data, key=lambda x:x//5000):
+    x_display = []
+    for k, g in groupby(data, key=lambda x: x//5000):
         count = len(list(g))
-        xticks.append("%dk" % (k*5000/1000))
+        x_display.append("%d-%d" % ((k*5000)/1000, ((k+1)*5000)/1000))
         yticks.append(count)
-        print("%s-%s:%s" % (k*5000, (k+1)*5000-1, count))
+        # print("%s-%s:%s" % (k*5000, (k+1)*5000-1, count))
 
-
+    xticks = range(len(x_display))
     print(yticks)
-    # x = np.arange(5000, 100000, 5000)
-    # y = data
-    # bar_width = 0.8
-    # n, bins, patches = plt.hist(y, bins=x, normed=True, histtype='bar', rwidth=bar_width)
-    
-    # plt.figure(1)
-    plt.ylim(0, 200)
-    plt.bar(x=range(len(yticks)), height=yticks, width=0.6, color="red", align="center", label="tianjin")
 
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.xticks(range(len(yticks)), xticks)
+    plt.ylim(0, 400)
+    plt.bar(x=range(len(yticks)), height=yticks, width=0.6, color="blue", label=city)
+
+    plt.xlabel('价格(k)')
+    plt.ylabel('总数(个)')
+    plt.xticks(xticks, x_display)
+
+    for x, y in zip(xticks, yticks):
+        plt.text(x, y, y, ha='center', va='bottom')
+
     plt.legend()
     plt.show()
-
-
-
 
 
 if __name__ == '__main__':
